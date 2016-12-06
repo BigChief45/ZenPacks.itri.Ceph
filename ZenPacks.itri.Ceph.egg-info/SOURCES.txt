@@ -23,9 +23,10 @@ ZenPacks/itri/Ceph/modeler/plugins/__init__.py
 ZenPacks/itri/Ceph/modeler/plugins/__init__.pyc
 ZenPacks/itri/Ceph/modeler/plugins/itri/__init__.py
 ZenPacks/itri/Ceph/modeler/plugins/itri/__init__.pyc
-ZenPacks/itri/Ceph/modeler/plugins/itri/cmd/CephDevice.pyc
 ZenPacks/itri/Ceph/modeler/plugins/itri/cmd/CephEndpoint.py
 ZenPacks/itri/Ceph/modeler/plugins/itri/cmd/CephEndpoint.pyc
+ZenPacks/itri/Ceph/modeler/plugins/itri/cmd/CephOsd.py
+ZenPacks/itri/Ceph/modeler/plugins/itri/cmd/CephOsd.pyc
 ZenPacks/itri/Ceph/modeler/plugins/itri/cmd/__init__.py
 ZenPacks/itri/Ceph/modeler/plugins/itri/cmd/__init__.pyc
 ZenPacks/itri/Ceph/resources/icon/CephEndpoint.png
