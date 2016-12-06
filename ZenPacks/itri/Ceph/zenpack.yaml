@@ -3,36 +3,67 @@ name: ZenPacks.itri.Ceph
 device_classes:
 
   /Storage/Ceph:
-    remove: true
     zProperties: 
       zPythonClass: ZenPacks.itri.Ceph.CephEndpoint
       zSnmpMonitorIgnore: false
       zCollectorPlugins:
         - itri.cmd.CephEndpoint
+        - itri.cmd.CephOsd
 
 classes:
   CephEndpoint:
     base: [zenpacklib.Device]
-    label: Ceph Device
+    label: Ceph Endpoint
+
+  CephCluster:
+    base: [zenpacklib.Component]
+    label: Cluster
+    properties:
+      version:
+        label: Version
+        order: 2
+      fsid:
+        label: FSID
+        order: 3
+        content_width: 200
+      bytes_used:
+        label: Bytes Used
+        order: 4
+        renderer: Zenoss.render.bytesString
+      bytes_avail:
+        label: Available Bytes
+        order: 5
+        renderer: Zenoss.render.bytesString
+      bytes_total:
+        label: Total Storage
+        order: 6
+        renderer: Zenoss.render.bytesString
+      status:
+        label: Status
+        order: 7
+      summary:
+        label: Summary
+        order: 8
+        content_width: 200
 
   CephMonitor:
     base: [zenpacklib.Component]
     label: Monitor
     properties:
       kb_total:
-        label: Total KB
+        label: Total Bytes
         order: 2
         renderer: Zenoss.render.bytesString
       kb_used:
-        label: Used KB
+        label: Used Bytes
         order: 3
         renderer: Zenoss.render.bytesString
       kb_avail:
-        label: Available KB
+        label: Available Bytes
         order: 4
         renderer: Zenoss.render.bytesString       
       avail_percent:
-        label: Avail. Percentage
+        label: Available Percentage
         order: 5
         renderer: Zenoss.render.availability
       health:
@@ -41,12 +72,55 @@ classes:
       rank:
         label: Rank
         order: 7
+      in_quorum:
+        label: In Quorum
+        type: boolean
+        order: 8
       host:
         label: Host
-        order: 8
+        order: 9
       port:
         label: Port
-        order: 9
+        order: 10
+
+  CephOsd:
+    base: [zenpacklib.Component]
+    label: Object Storage Daemon
+    properties:
+      up:
+        label: Up
+        type: boolean
+        order: 2
+        content_width: 30
+      inn:
+        label: In
+        type: boolean
+        order: 3
+        content_width: 30
+      pools:
+        label: Pools
+        order: 4
+        content_width: 30
+      weight:
+        label: Weight
+        type: float
+        order: 5
+        content_width: 40
+      public_addr:
+        label: Public Address
+        order: 6
+        content_width: 150
+      cluster_addr:
+        label: Cluster Address
+        order: 7
+        content_width: 150
+
+  CephPool:
+    base: [zenpacklib.Component]
+    label: Pool
         
 class_relationships:
+  - CephEndpoint 1:MC CephCluster
   - CephEndpoint 1:MC CephMonitor
+  - CephEndpoint 1:MC CephOsd
+  - CephEndpoint 1:MC CephPool
