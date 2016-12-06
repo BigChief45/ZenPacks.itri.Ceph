@@ -1,3 +1,5 @@
+"""Collets Ceph Endpoint cluster and monitor information"""
+
 from Products.DataCollector.plugins.CollectorPlugin import CommandPlugin
 from Products.DataCollector.plugins.DataMaps import ObjectMap, RelationshipMap
 from Products.ZenUtils.Utils import prepId
@@ -5,7 +7,7 @@ from Products.ZenUtils.Utils import prepId
 import json
 
 class CephEndpoint(CommandPlugin):
-    """Modeler plugin for Ceph devices"""
+    """Modeler plugin for Ceph endpoints"""
     
     # The essential variable that a CommandPlugin must provide is the COMMAND. This can
     # be anything that will run in a bash shell, so includes other language scripts if
@@ -20,7 +22,24 @@ class CephEndpoint(CommandPlugin):
     
         log.info('Modeler {0} processing data for device {1}'.format(self.name(), device.id))
         log.debug('Results: \n {0}'.format(results))
+
+        ## Cluster ##
+        clusters = []
+        clusters.append(ObjectMap(
+            modname='ZenPacks.itri.Ceph.CephCluster',
+            data=dict(
+                id = prepId(results['fsid']),
+                version = results['pgmap']['version'],
+                fsid = results['fsid'],
+                bytes_used = results['pgmap']['bytes_used'],
+                bytes_avail = results['pgmap']['bytes_avail'],
+                bytes_total = results['pgmap']['bytes_total'],
+                status = results['health']['summary'][0]['severity'],
+                summary = results['health']['summary'][0]['summary']
+            )))
         
+
+        ## Monitors ##
         mons_health = results['health']['health']['health_services'][0]['mons']
         mon_map = results['monmap']['mons']
         
@@ -42,15 +61,20 @@ class CephEndpoint(CommandPlugin):
         
         mon_index = 0
         for monitor in mon_map:
-            monitors[mon_index]['rank'] = monitor['rank']
-            monitors[mon_index]['host'] = monitor['addr'].split(':')[0]
-            monitors[mon_index]['port'] = monitor['addr'].split(':')[1]
+            monitors[mon_index].rank = monitor['rank']
+            monitors[mon_index].host = monitor['addr'].split(':')[0]
+            monitors[mon_index].port = monitor['addr'].split(':')[1].split('/')[0]
             
             mon_index += 1
         
         relmaps = []
         
-        # Monitors
+        relmaps.append(RelationshipMap(
+            relname='cephClusters',
+            modname='ZenPacks.itri.Ceph.CephCluster',
+            objmaps=clusters
+            ))
+        
         relmaps.append(RelationshipMap(
             relname='cephMonitors',
             modname='ZenPacks.itri.Ceph.CephMonitor',
