@@ -56,9 +56,11 @@ class CephEndpoint(CommandPlugin):
                     kb_used = monitor['kb_used'],
                     kb_avail = monitor['kb_avail'],
                     avail_percent = monitor['avail_percent'] / 100.00,
+                    in_quorum = monitor['name'] in results['quorum_names'],
                     health = monitor['health']
                 )))
         
+        # For Host Address and Port
         mon_index = 0
         for monitor in mon_map:
             monitors[mon_index].rank = monitor['rank']
