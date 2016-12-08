@@ -44,9 +44,7 @@ class CephEndpoint(CommandPlugin):
         mon_map = results['monmap']['mons']
         
         monitors = []
-        for monitor in mons_health:
-            log.debug('name: {0} | kb_total: {1} | kb_used: {2} | kb_avail: {3} | avail_percent: {4} | health: {5}'.format(monitor['name'], monitor['kb_total'], monitor['kb_used'], monitor['kb_avail'], monitor['avail_percent'], monitor['health']))
-            
+        for i, monitor in enumerate(mons_health):
             monitors.append(ObjectMap(
                 modname='ZenPacks.itri.Ceph.CephMonitor',
                 data=dict(
@@ -57,15 +55,12 @@ class CephEndpoint(CommandPlugin):
                     kb_avail = monitor['kb_avail'],
                     avail_percent = monitor['avail_percent'] / 100.00,
                     in_quorum = monitor['name'] in results['quorum_names'],
-                    health = monitor['health']
+                    health = monitor['health'],
+                    rank = mon_map[i]['rank'],
+                    host = mon_map[i]['addr'].split(':')[0],
+                    port = mon_map[i]['addr'].split(':')[1].split('/')[0]
                 )))
         
-        # For Host Address and Port
-        for i, monitor in enumerate(mon_map):
-            monitors[i].rank = monitor['rank']
-            monitors[i].host = monitor['addr'].split(':')[0]
-            monitors[i].port = monitor['addr'].split(':')[1].split('/')[0]
-            
         relmaps = []
         
         relmaps.append(RelationshipMap(
