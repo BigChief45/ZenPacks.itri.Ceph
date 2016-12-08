@@ -61,14 +61,11 @@ class CephEndpoint(CommandPlugin):
                 )))
         
         # For Host Address and Port
-        mon_index = 0
-        for monitor in mon_map:
-            monitors[mon_index].rank = monitor['rank']
-            monitors[mon_index].host = monitor['addr'].split(':')[0]
-            monitors[mon_index].port = monitor['addr'].split(':')[1].split('/')[0]
+        for i, monitor in enumerate(mon_map):
+            monitors[i].rank = monitor['rank']
+            monitors[i].host = monitor['addr'].split(':')[0]
+            monitors[i].port = monitor['addr'].split(':')[1].split('/')[0]
             
-            mon_index += 1
-        
         relmaps = []
         
         relmaps.append(RelationshipMap(
