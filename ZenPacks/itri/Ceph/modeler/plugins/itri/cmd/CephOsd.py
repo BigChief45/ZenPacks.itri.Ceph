@@ -9,12 +9,6 @@ import json
 class CephOsd(CommandPlugin):
     """Modeler plugin for Ceph Object Storage Daemons"""
     
-    # The essential variable that a CommandPlugin must provide is the COMMAND. This can
-    # be anything that will run in a bash shell, so includes other language scripts if
-    # they have an appropriate shebang.
-    #
-    # The output will be delivered into a RESULTS variable, to be processed by the
-    # PROCESS method.
     command = 'sudo ceph osd dump -f json'
 
     def process(self, device, results, log):

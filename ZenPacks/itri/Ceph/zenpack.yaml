@@ -9,6 +9,7 @@ device_classes:
       zCollectorPlugins:
         - itri.cmd.CephEndpoint
         - itri.cmd.CephOsd
+        - itri.cmd.CephPool
 
 classes:
   CephEndpoint:
@@ -66,6 +67,7 @@ classes:
         label: Available Percentage
         order: 5
         renderer: Zenoss.render.availability
+        label_width: 160
       health:
         label: Health
         order: 6
@@ -118,6 +120,18 @@ classes:
   CephPool:
     base: [zenpacklib.Component]
     label: Pool
+    properties:
+      bytes_used:
+        label: Bytes Used
+        order: 1
+        renderer: Zenoss.render.bytesString
+      max_avail:
+        label: Bytes Available
+        order: 2
+        renderer: Zenoss.render.bytesString
+      objects:
+        label: Objects
+        order: 3
         
 class_relationships:
   - CephEndpoint 1:MC CephCluster
